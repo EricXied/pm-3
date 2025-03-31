@@ -1,0 +1,27 @@
+package main.java.model;
+
+public enum Statistics {
+    STRENGTH("Strength"),
+    DEXTERITY("Dexterity"),
+    VITALITY("Vitality"),
+    INTELLIGENCE("Intelligence"),
+    HP("Hp"),
+    MP("Mp"),
+    CRITICAL_RATE("CriticalRate"),
+    EVASION_RATE("EvasionRate");
+
+    private final String name;
+
+    Statistics(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+}

@@ -1,0 +1,45 @@
+package main.java.dal;
+
+import main.java.model.Player;
+
+import java.sql.*;
+
+public class PlayerDAO {
+
+    public static Player create(
+            Connection cxn,
+            String fullName,
+            String email
+    ) throws SQLException {
+        String createPlayerSql = "INSERT INTO player (Fullname, Email) VALUES(?,?)";
+        try (PreparedStatement stmt = cxn.prepareStatement(createPlayerSql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, fullName);
+            stmt.setString(2, email);
+            stmt.executeUpdate();
+            return new Player(
+                    Utils.getAutoIncrementKey(stmt),
+                    fullName,
+                    email
+            );
+        }
+    }
+
+    public static Player getPlayerByID(Connection cxn, int playerId) throws SQLException {
+        String getPlayerSql = "SELECT * FROM player WHERE id = ?";
+        try (PreparedStatement stmt = cxn.prepareStatement(getPlayerSql)) {
+            stmt.setInt(1, playerId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Player(
+                            playerId,
+                            rs.getString("FullName"),
+                            rs.getString("Email")
+                    );
+                } else {
+                    return null;
+                }
+            }
+        }
+    }
+
+}

@@ -1,0 +1,65 @@
+package main.java.dal;
+
+import main.java.model.Characters;
+import main.java.model.Clan;
+import main.java.model.Player;
+import main.java.model.Race;
+
+import java.sql.*;
+
+public class CharacterDAO {
+
+    public static Characters create(
+            Connection cxn,
+            Player player,
+            String firstName,
+            String lastName,
+            Race race,
+            Clan clan
+    ) throws SQLException {
+        String createCharacterSql = "insert into character (PlayerID, FirstName, LastName, Race, Clan ) values(?,?,?,?,?)";
+        try (PreparedStatement insertStmt = cxn.prepareStatement(createCharacterSql, Statement.RETURN_GENERATED_KEYS)) {
+            insertStmt.setInt(1, player.getPlayerID());
+            insertStmt.setString(2, firstName);
+            insertStmt.setString(3, lastName);
+            insertStmt.setString(4, race.getName());
+            insertStmt.setString(5, clan.getClan());
+            insertStmt.executeUpdate();
+            return new Characters(
+                    Utils.getAutoIncrementKey(insertStmt),
+                    player,
+                    firstName,
+                    lastName,
+                    race,
+                    clan
+            );
+        }
+
+    }
+
+    public static Characters getCharacterByID(
+            Connection cxn,
+            int characterID
+    ) throws SQLException {
+        String getCharacterSql = "select * from character where PlayerID = ?";
+        try (PreparedStatement selectStmt = cxn.prepareStatement(getCharacterSql)) {
+            selectStmt.setInt(1, characterID);
+            ResultSet rs = selectStmt.executeQuery();
+            if (rs.next()) {
+                Player player = PlayerDAO.getPlayerByID(cxn, rs.getInt("PlayerID"));
+                Race race = Race.valueOf(rs.getString("Race"));
+                Clan clan = ClanDAO.getClanByName(cxn, rs.getString("ClanName"), race);
+                return new Characters(
+                        characterID,
+                        player,
+                        rs.getString("FirstName"),
+                        rs.getString("LastName"),
+                        race,
+                        clan
+                );
+            } else {
+                return null;
+            }
+        }
+    }
+}
