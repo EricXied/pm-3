@@ -57,5 +57,16 @@ public class ItemDAO {
         }
     }
 
+    public static void deleteItemById(
+            Connection cxn,
+            int itemId
+    ) throws SQLException {
+        String deleteItemByIdSql = "delete from Item where ItemId = ?";
+        try (PreparedStatement ps = cxn.prepareStatement(deleteItemByIdSql)) {
+            ps.setInt(1, itemId);
+            ps.executeUpdate();
+
+        }
+    }
 
 }

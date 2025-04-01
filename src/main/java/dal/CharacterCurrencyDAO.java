@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CharacterCurrencyDAO {
 
@@ -36,17 +38,16 @@ public class CharacterCurrencyDAO {
 
     public static CharacterCurrency getCharacterCurrencyByIdAndName(
             Connection cxn,
-            int characterId,
+            Characters character,
             String currencyName
     ) throws SQLException {
         String getCharacterCurrencySQL = "SELECT * FROM CharacterCurrencies WHERE CharacterID = ? AND CurrencyName = ?";
         try (PreparedStatement ps = cxn.prepareStatement(getCharacterCurrencySQL)) {
-            ps.setInt(1, characterId);
+            ps.setInt(1, character.getCharacterID());
             ps.setString(2, currencyName);
             try (ResultSet rs = ps.executeQuery()) {
 
                 if (rs.next()) {
-                    Characters character = CharacterDAO.getCharacterByID(cxn, characterId);
                     Currency currency = CurrencyDAO.getCurrencyByName(cxn, currencyName);
                     return new CharacterCurrency(
                             currency,
@@ -57,6 +58,34 @@ public class CharacterCurrencyDAO {
                 } else {
                     return null;
                 }
+            }
+        }
+    }
+
+
+    public List<CharacterCurrency> getCharacterCurrencies(
+            Connection cxn,
+            Characters character
+    ) throws SQLException {
+
+        String getCharacterCurrenciesSql = "SELECT * FROM CharacterCurrencies WHERE CharacterID = ?";
+
+        try (PreparedStatement ps = cxn.prepareStatement(getCharacterCurrenciesSql)) {
+            ps.setInt(1, character.getCharacterID());
+            try (ResultSet rs = ps.executeQuery()) {
+                List<CharacterCurrency> currencies = new ArrayList<>();
+                while (rs.next()) {
+                    Currency currency = CurrencyDAO.getCurrencyByName(cxn, rs.getString("CurrencyName"));
+                    currencies.add(
+                            new CharacterCurrency(
+                                    currency,
+                                    character,
+                                    rs.getInt("TotalAmount"),
+                                    rs.getInt("WeeklyAmount")
+                            )
+                    );
+                }
+                return currencies;
             }
         }
     }

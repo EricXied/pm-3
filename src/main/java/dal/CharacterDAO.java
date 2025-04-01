@@ -6,6 +6,8 @@ import main.java.model.Player;
 import main.java.model.Race;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CharacterDAO {
 
@@ -41,7 +43,7 @@ public class CharacterDAO {
             Connection cxn,
             int characterID
     ) throws SQLException {
-        String getCharacterSql = "select * from character where PlayerID = ?";
+        String getCharacterSql = "select * from character where CharacterID = ?";
         try (PreparedStatement selectStmt = cxn.prepareStatement(getCharacterSql)) {
             selectStmt.setInt(1, characterID);
             ResultSet rs = selectStmt.executeQuery();
@@ -60,6 +62,33 @@ public class CharacterDAO {
             } else {
                 return null;
             }
+        }
+    }
+
+    public static List<Characters> getCharactersByPlayerId(
+            Connection cxn,
+            Player player
+    ) throws SQLException {
+        String getCharacterSql = "select * from character where PlayerID = ?";
+        try (PreparedStatement selectStmt = cxn.prepareStatement(getCharacterSql)) {
+            selectStmt.setInt(1, player.getPlayerID());
+            ResultSet rs = selectStmt.executeQuery();
+            List<Characters> characters = new ArrayList<>();
+
+            while (rs.next()) {
+                Race race = Race.valueOf(rs.getString("Race"));
+                Clan clan = ClanDAO.getClanByName(cxn, rs.getString("ClanName"), race);
+                characters.add(new Characters(
+                        rs.getInt("CharacterID"),
+                        player,
+                        rs.getString("FirstName"),
+                        rs.getString("LastName"),
+                        race,
+                        clan
+                ));
+
+            }
+            return characters;
         }
     }
 }

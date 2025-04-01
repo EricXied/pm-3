@@ -40,17 +40,16 @@ public class GearDAO {
 
     public static Gear getGearByid(
             Connection cxn,
-            int itemId
+            Item item
     ) throws SQLException {
         String getGearSql = "select * from gear where ItemID = ?";
         try (PreparedStatement ps = cxn.prepareStatement(getGearSql)) {
-            ps.setInt(1, itemId);
+            ps.setInt(1, item.getItemID());
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Item item = ItemDAO.getItemById(cxn, itemId);
                     Slot slot = Slot.valueOf(rs.getString("SlotName"));
                     return new Gear(
-                            itemId,
+                            item.getItemID(),
                             item.getItemName(),
                             item.getLevel(),
                             item.getMaxStackSize(),
@@ -64,4 +63,18 @@ public class GearDAO {
             }
         }
     }
+
+    public static void deleteGear(
+            Connection cxn,
+            Item item
+    ) throws SQLException {
+        String deleteGearSQL = "delete from gear where ItemID = ?";
+        try (PreparedStatement ps = cxn.prepareStatement(deleteGearSQL)) {
+            ItemDAO.deleteItemById(cxn, item.getItemID());
+            ps.setInt(1, item.getItemID());
+            ps.executeUpdate();
+
+        }
+    }
+
 }

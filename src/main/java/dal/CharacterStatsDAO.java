@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CharacterStatsDAO {
 
@@ -29,17 +31,16 @@ public class CharacterStatsDAO {
 
     public static CharacterStats getCharacterStatsByIDAndStatsName(
             Connection cxn,
-            int characterID,
-            String statsName
+            Characters character,
+            Statistics statistics
     ) throws SQLException {
         String selectCharacterStatsSql = "SELECT * FROM CharacterStats WHERE CharacterID = ? AND StatsName = ?";
         try (PreparedStatement ps = cxn.prepareStatement(selectCharacterStatsSql)) {
-            ps.setInt(1, characterID);
-            ps.setString(2, statsName);
+            ps.setInt(1, character.getCharacterID());
+            ps.setString(2, statistics.getName());
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Characters character = CharacterDAO.getCharacterByID(cxn, characterID);
-                    Statistics statistics = Statistics.valueOf(statsName);
+
                     return new CharacterStats(
                             statistics,
                             character,
@@ -51,4 +52,28 @@ public class CharacterStatsDAO {
             }
         }
     }
+
+    public static List<CharacterStats> getCharacterStatsById(
+            Connection cxn,
+            Characters character
+    ) throws SQLException {
+        String selectCharacterStatsSql = "SELECT * FROM CharacterStats WHERE CharacterID = ?";
+        try (PreparedStatement ps = cxn.prepareStatement(selectCharacterStatsSql)) {
+            ps.setInt(1, character.getCharacterID());
+            try (ResultSet rs = ps.executeQuery()) {
+                List<CharacterStats> characterStatsList = new ArrayList<>();
+                while (rs.next()) {
+                    characterStatsList.add(
+                            new CharacterStats(
+                                    Statistics.valueOf(rs.getString("StatsName")),
+                                    character,
+                                    rs.getInt("Value")
+                            )
+                    );
+                }
+                return characterStatsList;
+            }
+        }
+    }
+
 }

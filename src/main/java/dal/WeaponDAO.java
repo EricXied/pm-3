@@ -68,4 +68,27 @@ public class WeaponDAO {
             }
         }
     }
+
+    public static Weapon updateWeaponDamage(
+            Connection cxn,
+            Weapon weapon,
+            int newDamage
+    ) throws SQLException {
+        String updateDamageSql = "update Weapon set damage = ? where ItemID = ?";
+        try (PreparedStatement ps = cxn.prepareStatement(updateDamageSql)) {
+            Item item = ItemDAO.getItemById(cxn, weapon.getItemID());
+            ps.setInt(1, newDamage);
+            ps.executeUpdate();
+            return new Weapon(
+                    item.getItemID(),
+                    item.getItemName(),
+                    item.getLevel(),
+                    item.getMaxStackSize(),
+                    item.getPrice(),
+                    item.getRequiredLevel(),
+                    weapon.getJob(),
+                    newDamage
+            );
+        }
+    }
 }

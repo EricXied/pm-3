@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConsumableBonusDAO {
     public static ConsumableBonus create(
@@ -37,15 +39,16 @@ public class ConsumableBonusDAO {
         }
     }
 
-    public static ConsumableBonus getConsumableBonusByItemIDAndStatsName(Connection cxn, int itemID, String statsName) throws SQLException {
-
+    public static ConsumableBonus getConsumableBonusByItemIDAndStatsName(
+            Connection cxn,
+            Consumable consumable,
+            Statistics statistics
+    ) throws SQLException {
         String selectConsumableBonusSql = "select * from ConsumableBonus where ItemID = ? and StatsName = ?";
         try (PreparedStatement ps = cxn.prepareStatement(selectConsumableBonusSql)) {
-            ps.setInt(1, itemID);
+            ps.setInt(1, consumable.getItemID());
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Statistics statistics = Statistics.valueOf(statsName);
-                    Consumable consumable = ConsumableDAO.getConsumableById(cxn, itemID);
                     return new ConsumableBonus(
                             consumable,
                             statistics,
@@ -59,4 +62,29 @@ public class ConsumableBonusDAO {
             }
         }
     }
+
+    public static List<ConsumableBonus> getConsumableBonusByItemID(
+            Connection cxn,
+            Item item
+    ) throws SQLException {
+        String selectConsumableBonusSql = "select * from ConsumableBonus where ItemID = ?";
+        try (PreparedStatement ps = cxn.prepareStatement(selectConsumableBonusSql)) {
+            ps.setInt(1, item.getItemID());
+            try (ResultSet rs = ps.executeQuery()) {
+                List<ConsumableBonus> bonuses = new ArrayList<>();
+                Consumable consumable = ConsumableDAO.getConsumableById(cxn, item);
+                while (rs.next()) {
+                    bonuses.add(new ConsumableBonus(
+                            consumable,
+                            Statistics.valueOf(rs.getString("StatsName")),
+                            rs.getInt("Value"),
+                            rs.getInt("BonusCap"),
+                            rs.getFloat("BonusPercentage")
+                    ));
+                }
+                return bonuses;
+            }
+        }
+    }
+
 }

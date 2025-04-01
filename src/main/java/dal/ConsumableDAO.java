@@ -2,7 +2,6 @@ package main.java.dal;
 
 import main.java.model.Consumable;
 import main.java.model.Item;
-import main.java.model.Job;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,26 +12,21 @@ public class ConsumableDAO {
 
     public static Consumable create(
             Connection cxn,
-            String itemName,
-            int level,
-            int maxStackSize,
-            int price,
-            int requiredLevel,
+            Item item,
             String description
     ) throws SQLException {
         String insertConsumableSql = "insert into Consumable (ItemID, Description) values (?, ?)";
         try (PreparedStatement ps = cxn.prepareStatement(insertConsumableSql)) {
-            Item item = ItemDAO.create(cxn, itemName, level, maxStackSize, price, requiredLevel);
             ps.setInt(1, item.getItemID());
             ps.setString(2, description);
             ps.executeUpdate();
             return new Consumable(
                     item.getItemID(),
-                    itemName,
-                    level,
-                    maxStackSize,
-                    price,
-                    requiredLevel,
+                    item.getItemName(),
+                    item.getLevel(),
+                    item.getMaxStackSize(),
+                    item.getPrice(),
+                    item.getRequiredLevel(),
                     description
             );
         }
@@ -40,16 +34,15 @@ public class ConsumableDAO {
 
     public static Consumable getConsumableById(
             Connection cxn,
-            int itemId
+            Item item
     ) throws SQLException {
         String selectConsumableSql = "select * from Consumable where ItemID = ?";
         try (PreparedStatement ps = cxn.prepareStatement(selectConsumableSql)) {
-            ps.setInt(1, itemId);
+            ps.setInt(1, item.getItemID());
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Item item = ItemDAO.getItemById(cxn, itemId);
                     return new Consumable(
-                            itemId,
+                            item.getItemID(),
                             item.getItemName(),
                             item.getLevel(),
                             item.getMaxStackSize(),
@@ -61,6 +54,29 @@ public class ConsumableDAO {
                     return null;
                 }
             }
+        }
+    }
+
+    public static Consumable updateDescription(
+            Connection cxn,
+            Consumable consumable,
+            String newDescription
+    ) throws SQLException {
+        String updateConsumableSql = "update Consumable set Description = ? where ItemID = ?";
+        try (PreparedStatement ps = cxn.prepareStatement(updateConsumableSql)) {
+            ps.setString(1, newDescription);
+            ps.setInt(2, consumable.getItemID());
+            ps.executeUpdate();
+            Item item = ItemDAO.getItemById(cxn, consumable.getItemID());
+            return new Consumable(
+                    consumable.getItemID(),
+                    item.getItemName(),
+                    item.getLevel(),
+                    item.getMaxStackSize(),
+                    item.getPrice(),
+                    item.getRequiredLevel(),
+                    newDescription
+            );
         }
     }
 }

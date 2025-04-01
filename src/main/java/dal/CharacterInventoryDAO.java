@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CharacterInventoryDAO {
 
@@ -31,22 +33,45 @@ public class CharacterInventoryDAO {
 
     public static CharacterInventory getInventoryByIdAndSlotNumber(
             Connection cxn,
-            int characterId,
+            Characters character,
             int slotNumber
     ) throws SQLException {
         String selectCharacterInventorySQL = "select * from CharacterInventory where CharacterID = ? and SlotNumber = ?";
         try (PreparedStatement ps = cxn.prepareStatement(selectCharacterInventorySQL)) {
-            ps.setInt(1, characterId);
+            ps.setInt(1, character.getCharacterID());
             ps.setInt(2, slotNumber);
             try (ResultSet rs = ps.executeQuery()) {
-                Characters characters = CharacterDAO.getCharacterByID(cxn, characterId);
                 Item item = ItemDAO.getItemById(cxn, rs.getInt("ItemID"));
                 return new CharacterInventory(
                         slotNumber,
-                        characters,
+                        character,
                         item,
                         rs.getInt("Quantity")
                 );
+            }
+        }
+    }
+
+    public static List<CharacterInventory> getAllInventoryById(
+            Connection cxn,
+            Characters character
+    ) throws SQLException {
+        String selectCharacterInventorySQL = "select * from CharacterInventory where CharacterID = ?";
+        try (PreparedStatement ps = cxn.prepareStatement(selectCharacterInventorySQL)) {
+            ps.setInt(1, character.getCharacterID());
+            try (ResultSet rs = ps.executeQuery()) {
+                List<CharacterInventory> inventoryList = new ArrayList<>();
+                while (rs.next()) {
+                    inventoryList.add(
+                            new CharacterInventory(
+                                    rs.getInt("SlotNumber"),
+                                    character,
+                                    ItemDAO.getItemById(cxn, rs.getInt("ItemID")),
+                                    rs.getInt("Quantity")
+                            )
+                    );
+                }
+                return inventoryList;
             }
         }
     }

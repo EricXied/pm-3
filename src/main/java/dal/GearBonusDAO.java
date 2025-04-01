@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GearBonusDAO {
 
@@ -30,17 +32,16 @@ public class GearBonusDAO {
 
     public static GearBonus getGearBonusByIdAndStatsName(
             Connection cxn,
-            int itemID,
+            Item item,
             String statsName
     ) throws SQLException {
         String getGearBonusSql = "select * from GearBonus where ItemID = ? and StatsName = ?";
         try (PreparedStatement ps = cxn.prepareStatement(getGearBonusSql)) {
-            ps.setInt(1, itemID);
+            ps.setInt(1, item.getItemID());
             ps.setString(2, statsName);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     Statistics statistics = Statistics.valueOf(statsName);
-                    Item item = ItemDAO.getItemById(cxn, itemID);
                     return new GearBonus(
                             item,
                             statistics,
@@ -49,6 +50,26 @@ public class GearBonusDAO {
                 } else {
                     return null;
                 }
+            }
+        }
+    }
+
+    public static List<GearBonus> getGearBonusById(
+            Connection cxn,
+            Item item
+    ) throws SQLException {
+        String getGearBonusSql = "select * from GearBonus where ItemID = ?";
+        try (PreparedStatement ps = cxn.prepareStatement(getGearBonusSql)) {
+            ps.setInt(1, item.getItemID());
+            try (ResultSet rs = ps.executeQuery()) {
+
+                List<GearBonus> gearBonusList = new ArrayList<>();
+                while (rs.next()) {
+                    Statistics statistics = Statistics.valueOf(rs.getString("StatsName"));
+                    gearBonusList.add(new GearBonus(item, statistics, rs.getInt("Value")));
+
+                }
+                return gearBonusList;
             }
         }
     }

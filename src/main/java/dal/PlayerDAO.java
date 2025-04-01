@@ -42,4 +42,15 @@ public class PlayerDAO {
         }
     }
 
+    public static void deletePlayerByID(
+            Connection cxn,
+            int playerId
+    ) throws SQLException {
+        String deletePlayerSql = "DELETE FROM player WHERE id = ?";
+        try (PreparedStatement stmt = cxn.prepareStatement(deletePlayerSql)) {
+            stmt.setInt(1, playerId);
+            stmt.executeUpdate();
+        }
+    }
+
 }

@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CharacterEquipmentDAO {
 
@@ -28,30 +30,47 @@ public class CharacterEquipmentDAO {
         }
     }
 
-    public static CharacterEquipment getEquipmentByIDAndSlot(
+    public static CharacterEquipment getEquipmentByIdAndSlot(
             Connection cxn,
-            int characterID,
-            String slotName
+            Characters character,
+            Slot slot
     ) throws SQLException {
         String getEquipmentByIDAndSlotSql = "SELECT * FROM CharacterEquipment WHERE CharacterID = ? AND SlotName = ?";
         try (PreparedStatement ps = cxn.prepareStatement(getEquipmentByIDAndSlotSql)) {
 
-            ps.setInt(1, characterID);
-            ps.setString(2, slotName);
+            ps.setInt(1, character.getCharacterID());
+            ps.setString(2, slot.getName());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                Slot slot = Slot.valueOf(slotName);
-                Item item = ItemDAO.getItemById(cxn, rs.getInt("ItemID"));
-                Characters character = CharacterDAO.getCharacterByID(cxn, characterID);
                 return new CharacterEquipment(
                         character,
                         slot,
-                        item
+                        ItemDAO.getItemById(cxn, rs.getInt("ItemID"))
                 );
             } else {
                 return null;
             }
 
+        }
+    }
+
+    public static List<CharacterEquipment> getAllEquipmentById(
+            Connection cxn,
+            Characters character
+    ) throws SQLException {
+        String getAllEquipmentByIdSql = "SELECT * FROM CharacterEquipment WHERE CharacterID = ?";
+        try (PreparedStatement ps = cxn.prepareStatement(getAllEquipmentByIdSql)) {
+            ps.setInt(1, character.getCharacterID());
+            ResultSet rs = ps.executeQuery();
+            List<CharacterEquipment> equipmentList = new ArrayList<>();
+            while (rs.next()) {
+                equipmentList.add(new CharacterEquipment(
+                        character,
+                        Slot.valueOf(rs.getString("SlotName")),
+                        ItemDAO.getItemById(cxn, rs.getInt("ItemID"))
+                ));
+            }
+            return equipmentList;
         }
     }
 }

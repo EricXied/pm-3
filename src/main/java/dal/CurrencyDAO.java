@@ -1,8 +1,6 @@
 package main.java.dal;
 
-import main.java.model.Characters;
 import main.java.model.Currency;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,7 +14,7 @@ public class CurrencyDAO {
             int cap,
             int weeklyCap
     ) throws SQLException {
-        String insertCurrencySql = "INSERT INTO currency (Currency_name, Cap, WeeklyCap) values (?,?,?) ";
+        String insertCurrencySql = "INSERT INTO currency (CurrencyName, Cap, WeeklyCap) values (?,?,?) ";
         try (PreparedStatement ps = cxn.prepareStatement(insertCurrencySql)) {
             ps.setString(1, currencyName);
             ps.setInt(2, cap);
@@ -50,4 +48,6 @@ public class CurrencyDAO {
             }
         }
     }
+
+
 }
