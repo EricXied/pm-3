@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 public class CurrencyDAO {
 
-    public static Currency createCurrency(
+    public static Currency create(
             Connection cxn,
             String currencyName,
             int cap,
