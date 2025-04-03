@@ -1,6 +1,7 @@
 package main.java.dal;
 
 import main.java.model.Currency;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,7 +33,7 @@ public class CurrencyDAO {
             Connection cxn,
             String currencyName
     ) throws SQLException {
-        String selectCurrencySql = "SELECT * FROM currency WHERE Currency_name = ?";
+        String selectCurrencySql = "SELECT * FROM currency WHERE CurrencyName = ?";
         try (PreparedStatement ps = cxn.prepareStatement(selectCurrencySql)) {
             ps.setString(1, currencyName);
             try (ResultSet rs = ps.executeQuery()) {
@@ -46,6 +47,26 @@ public class CurrencyDAO {
                     return null;
                 }
             }
+        }
+    }
+
+    public static Currency updateCurrencyCapByName(
+            Connection cxn,
+            int newCap,
+            String currencyName
+    ) throws SQLException {
+        String updateCurrencyCapSql = "UPDATE currency SET Cap = ? WHERE CurrencyName = ?";
+        try (PreparedStatement ps = cxn.prepareStatement(updateCurrencyCapSql)) {
+            Currency currency = getCurrencyByName(cxn, currencyName);
+            ps.setInt(1, newCap);
+            ps.setString(2, currencyName);
+            ps.executeUpdate();
+
+            return new Currency(
+                    currencyName,
+                    newCap,
+                    currency.getWeeklyCap()
+            );
         }
     }
 

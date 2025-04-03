@@ -65,7 +65,7 @@ public class CharacterStatsDAO {
                 while (rs.next()) {
                     characterStatsList.add(
                             new CharacterStats(
-                                    Statistics.valueOf(rs.getString("StatsName")),
+                                    Statistics.valueOf(rs.getString("StatsName").toUpperCase()),
                                     character,
                                     rs.getInt("Value")
                             )

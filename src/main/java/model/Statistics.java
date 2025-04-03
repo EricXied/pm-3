@@ -7,8 +7,8 @@ public enum Statistics {
     INTELLIGENCE("Intelligence"),
     HP("Hp"),
     MP("Mp"),
-    CRITICAL_RATE("CriticalRate"),
-    EVASION_RATE("EvasionRate");
+    CRITICALRATE("CriticalRate"),
+    EVASIONRATE("EvasionRate");
 
     private final String name;
 

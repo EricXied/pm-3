@@ -24,100 +24,134 @@ public class Driver {
         try (
                 Connection cxn = ConnectionManager.getConnection()
         ) {
-            // INSERT objects from our model.
-            Date date = new Date();
-            Player player1 = PlayerDAO.create(cxn, "2hy", "1066153598@qq.com");
-            Player player2 = PlayerDAO.create(cxn, "NovaKing", "NovaaaaKinggggg@gmail.com");
-            Player player3 = PlayerDAO.create(cxn, "Chinamaster", "chinamaster@gmail.com");
-            Player player4 = PlayerDAO.create(cxn, "Player_4", "player4@game.com");
-            Player player5 = PlayerDAO.create(cxn, "Player_5", "player5@game.com");
-            Player player6 = PlayerDAO.create(cxn, "Player_6", "player6@game.com");
-            Player player7 = PlayerDAO.create(cxn, "Player_7", "player7@game.com");
 
-            Clan clan1 = ClanDAO.create(cxn, Race.ELF, "Duskwight");
-            Clan clan2 = ClanDAO.create(cxn, Race.ELF, "Wildwood");
-            Clan clan3 = ClanDAO.create(cxn, Race.ORC, "Bloodfang");
-            Clan clan4 = ClanDAO.create(cxn, Race.ORC, "Ironjaw");
-            Clan clan5 = ClanDAO.create(cxn, Race.HUMAN, "Midlanders");
-            Clan clan6 = ClanDAO.create(cxn, Race.HUMAN, "Highlanders");
-            Clan clan7 = ClanDAO.create(cxn, Race.DWARF, "Stonebeard");
-            Clan clan8 = ClanDAO.create(cxn, Race.DWARF, "Thunderhammer");
-            Clan clan9 = ClanDAO.create(cxn, Race.GOBLIN, "Rotgear Syndicate");
-            Clan clan10 = ClanDAO.create(cxn, Race.GOBLIN, "Boomgob Brigands");
-            Clan clan11 = ClanDAO.create(cxn, Race.HALFLING, "Riverfoot");
-            Clan clan12 = ClanDAO.create(cxn, Race.HALFLING, "Hearthhill");
+            System.out.println("Testing PlayerDAO...");
+            Player player1 = PlayerDAO.create(cxn, "TestUser1", "test1@example.com");
+            Player player2 = PlayerDAO.create(cxn, "TestUser2", "test2@example.com");
+            Player player3 = PlayerDAO.create(cxn, "TestUser3", "test3@example.com");
 
-            Characters character1 = CharacterDAO.create(cxn, player1, "Shark", "Z", Race.ELF, clan1);
-            Characters character2 = CharacterDAO.create(cxn, player2, "Ryan", "Walker", Race.ORC, clan3);
-            Characters character3 = CharacterDAO.create(cxn, player3, "Nova", "Vex", Race.HUMAN, clan5);
-            Characters character4 = CharacterDAO.create(cxn, player4, "Elara", "Nightbloom", Race.DWARF, clan7);
-            Characters character5 = CharacterDAO.create(cxn, player5, "Zane", "Draven", Race.GOBLIN, clan9);
-            Characters character6 = CharacterDAO.create(cxn, player6, "Sable", "Orion", Race.HALFLING, clan11);
-            Characters character7 = CharacterDAO.create(cxn, player7, "Wyatt", "Wyatt", Race.GOBLIN, clan10);
+            Player fetchedPlayer = PlayerDAO.getPlayerByID(cxn, player1.getPlayerID());
+            System.out.println("Fetched Player: " + fetchedPlayer.getFullName());
 
-            CharacterJob characterJob1 = CharacterJobDAO.createCharacterJob(cxn, Job.WARRIOR, character1, 20, 1500, false);
-            CharacterJob characterJob2 = CharacterJobDAO.createCharacterJob(cxn, Job.MAGE, character2, 15, 1200, true);
-            CharacterJob characterJob3 = CharacterJobDAO.createCharacterJob(cxn, Job.THIEF, character3, 30, 2000, false);
-            CharacterJob characterJob4 = CharacterJobDAO.createCharacterJob(cxn, Job.HUNTER, character4, 10, 800, true);
-            CharacterJob characterJob5 = CharacterJobDAO.createCharacterJob(cxn, Job.NECROMANCER, character5, 25, 1800, false);
+            System.out.println("Testing ClanDAO...");
+            Clan clan1 = ClanDAO.create(cxn, Race.ELF, "TestClan1");
+            Clan clan2 = ClanDAO.create(cxn, Race.ELF, "TestClan2");
+            Clan clan3 = ClanDAO.create(cxn, Race.HUMAN, "TestClan3");
+            Clan fetchedClan = ClanDAO.getClanByName(cxn, "TestClan1", Race.ELF);
+            System.out.println("Fetched Clan: " + fetchedClan.getClan());
+            List<Clan> clansByRace = ClanDAO.getAllClansByRaceName(cxn, Race.ELF);
+            System.out.println("Total ELF clans: " + clansByRace.size());
 
-            Currency currency1 = CurrencyDAO.create(cxn, "Gold", 100000, 5000);
-            Currency currency2 = CurrencyDAO.create(cxn, "Silver", 5000000, 100000);
-            Currency currency3 = CurrencyDAO.create(cxn, "Platinum", 5000, 200);
-            Currency currency4 = CurrencyDAO.create(cxn, "MagicCoins", 100000, 3000);
-            Currency currency5 = CurrencyDAO.create(cxn, "DivineCoins", 500, 50);
-            Currency currency6 = CurrencyDAO.create(cxn, "ChaosCoins", 500, 50);
-            Currency currency7 = CurrencyDAO.create(cxn, "ExaltedCoins", 500, 50);
+            System.out.println("Testing CharacterDAO...");
+            Characters character1 = CharacterDAO.create(cxn, player1, "Alice", "Light", Race.ELF, clan1);
+            Characters character2 = CharacterDAO.create(cxn, player1, "Bob", "Shadow", Race.ELF, clan2);
+            Characters character3 = CharacterDAO.create(cxn, player2, "Cleo", "Storm", Race.HUMAN, clan3);
+            Characters character4 = CharacterDAO.create(cxn, player2, "Drake", "Frost", Race.ELF, clan1);
+            Characters character5 = CharacterDAO.create(cxn, player3, "Eve", "Blaze", Race.HUMAN, clan3);
+            Characters character6 = CharacterDAO.create(cxn, player3, "Finn", "Stone", Race.ELF, clan2);
+            Characters character7 = CharacterDAO.create(cxn, player3, "Gwen", "Ash", Race.ELF, clan1);
+            Characters fetchedCharacter = CharacterDAO.getCharacterByID(cxn, character1.getCharacterID());
+            System.out.println("Fetched Character: " + fetchedCharacter.getFirstName());
+            List<Characters> charactersByPlayer = CharacterDAO.getCharactersByPlayerId(cxn, player1);
+            System.out.println("Characters under player1: " + charactersByPlayer.size());
 
-            CharacterStats characterStats11 = CharacterStatsDAO.create(cxn, Statistics.STRENGTH, character1,12);
-            CharacterStats characterStats12 = CharacterStatsDAO.create(cxn, Statistics.DEXTERITY, character1,8);
-            CharacterStats characterStats13 = CharacterStatsDAO.create(cxn, Statistics.VITALITY, character1,10);
-            CharacterStats characterStats14 = CharacterStatsDAO.create(cxn, Statistics.INTELLIGENCE, character1,7);
-            CharacterStats characterStats15 = CharacterStatsDAO.create(cxn, Statistics.HP, character1,120);
-            CharacterStats characterStats16 = CharacterStatsDAO.create(cxn, Statistics.MP, character1,90);
-            CharacterStats characterStats17 = CharacterStatsDAO.create(cxn, Statistics.CRITICAL_RATE, character1,3);
-            CharacterStats characterStats18 = CharacterStatsDAO.create(cxn, Statistics.EVASION_RATE, character1,2);
+            System.out.println("Testing CharacterJobDAO...");
+            CharacterJob job1 = CharacterJobDAO.createCharacterJob(cxn, Job.WARRIOR, character1, 10, 1000, false);
+            CharacterJob job2 = CharacterJobDAO.createCharacterJob(cxn, Job.MAGE, character2, 15, 2000, true);
+            CharacterJob fetchedJob = CharacterJobDAO.getCharacterJobByIdAndJobName(cxn, character1, Job.WARRIOR);
+            System.out.println("Fetched Job: " + fetchedJob.getJob().name());
+            List<CharacterJob> jobs = CharacterJobDAO.getAllCharacterJobsById(cxn, character1);
+            System.out.println("Total Jobs for character1: " + jobs.size());
 
-            CharacterStats characterStats21 = CharacterStatsDAO.create(cxn, Statistics.STRENGTH, character2,9);
-            CharacterStats characterStats22 = CharacterStatsDAO.create(cxn, Statistics.DEXTERITY, character2,14);
-            CharacterStats characterStats23 = CharacterStatsDAO.create(cxn, Statistics.VITALITY, character2,7);
-            CharacterStats characterStats24 = CharacterStatsDAO.create(cxn, Statistics.INTELLIGENCE, character2,10);
-            CharacterStats characterStats25 = CharacterStatsDAO.create(cxn, Statistics.HP, character2,100);
-            CharacterStats characterStats26 = CharacterStatsDAO.create(cxn, Statistics.MP, character2,110);
-            CharacterStats characterStats27 = CharacterStatsDAO.create(cxn, Statistics.CRITICAL_RATE, character2,4);
-            CharacterStats characterStats28 = CharacterStatsDAO.create(cxn, Statistics.EVASION_RATE, character2,3);
+            CurrencyDAO.create(cxn, "Gold", 100000, 5000);
+            CurrencyDAO.create(cxn, "Silver", 5000000, 100000);
+            CurrencyDAO.create(cxn, "Platinum", 5000, 200);
+            CurrencyDAO.create(cxn, "MagicCoins", 100000, 3000);
+            CurrencyDAO.create(cxn, "DivineCoins", 500, 50);
+            CurrencyDAO.create(cxn, "ChaosCoins", 500, 50);
+            CurrencyDAO.create(cxn, "ExaltedCoins", 500, 50);
 
-            CharacterStats characterStats31 = CharacterStatsDAO.create(cxn, Statistics.STRENGTH, character3,8);
-            CharacterStats characterStats32 = CharacterStatsDAO.create(cxn, Statistics.DEXTERITY, character3,10);
-            CharacterStats characterStats33 = CharacterStatsDAO.create(cxn, Statistics.VITALITY, character3,15);
-            CharacterStats characterStats34 = CharacterStatsDAO.create(cxn, Statistics.INTELLIGENCE, character3,6);
-            CharacterStats characterStats35 = CharacterStatsDAO.create(cxn, Statistics.HP, character3,140);
-            CharacterStats characterStats36 = CharacterStatsDAO.create(cxn, Statistics.MP, character3,70);
-            CharacterStats characterStats37 = CharacterStatsDAO.create(cxn, Statistics.CRITICAL_RATE, character3,2);
-            CharacterStats characterStats38 = CharacterStatsDAO.create(cxn, Statistics.EVASION_RATE, character3,4);
+            System.out.println("Testing CharacterCurrencyDAO...");
+            for (int i = 1; i <= 7; i++) {
+                Characters c = CharacterDAO.getCharacterByID(cxn, i);
+                CharacterCurrencyDAO.create(cxn, CurrencyDAO.getCurrencyByName(cxn, "Gold"), c, 9000 + i * 100, 500 + i);
+                CharacterCurrencyDAO.create(cxn, CurrencyDAO.getCurrencyByName(cxn, "Silver"), c, 400000 + i * 1000, 70000 + i * 100);
+                CharacterCurrencyDAO.create(cxn, CurrencyDAO.getCurrencyByName(cxn, "Platinum"), c, 2000 + i * 50, 180 + i);
+                CharacterCurrencyDAO.create(cxn, CurrencyDAO.getCurrencyByName(cxn, "MagicCoins"), c, 7000 + i * 100, 2000 + i * 100);
+                CharacterCurrencyDAO.create(cxn, CurrencyDAO.getCurrencyByName(cxn, "DivineCoins"), c, 400 + i * 5, 40 + i);
+                CharacterCurrencyDAO.create(cxn, CurrencyDAO.getCurrencyByName(cxn, "ChaosCoins"), c, 200 + i * 10, 45 + i);
+                CharacterCurrencyDAO.create(cxn, CurrencyDAO.getCurrencyByName(cxn, "ExaltedCoins"), c, 300 + i * 20, 48 + i);
+                CharacterCurrencyDAO.getCharacterCurrencyByIdAndName(cxn, c, "Gold");
+                CharacterCurrencyDAO.getCharacterCurrencies(cxn, c);
+            }
 
-            CharacterStats characterStats41 = CharacterStatsDAO.create(cxn, Statistics.STRENGTH, character4,6);
-            CharacterStats characterStats42 = CharacterStatsDAO.create(cxn, Statistics.DEXTERITY, character4,7);
-            CharacterStats characterStats43 = CharacterStatsDAO.create(cxn, Statistics.VITALITY, character4,8);
-            CharacterStats characterStats44 = CharacterStatsDAO.create(cxn, Statistics.INTELLIGENCE, character4,18);
-            CharacterStats characterStats45 = CharacterStatsDAO.create(cxn, Statistics.HP, character4,80);
-            CharacterStats characterStats46 = CharacterStatsDAO.create(cxn, Statistics.MP, character4,160);
-            CharacterStats characterStats47 = CharacterStatsDAO.create(cxn, Statistics.CRITICAL_RATE, character4,5);
-            CharacterStats characterStats48 = CharacterStatsDAO.create(cxn, Statistics.EVASION_RATE, character4,3);
+            System.out.println("Testing CharacterStatsDAO...");
+            Statistics[] stats = Statistics.values();
+            int[][] values = {
+                    {12, 8, 10, 7, 120, 90, 3, 2},
+                    {9, 14, 7, 10, 100, 110, 4, 3},
+                    {8, 10, 15, 6, 140, 70, 2, 4},
+                    {6, 7, 8, 18, 80, 160, 5, 3},
+                    {14, 10, 9, 6, 130, 60, 3, 4},
+                    {7, 9, 12, 15, 100, 140, 4, 5},
+                    {11, 12, 10, 9, 110, 95, 6, 2}
+            };
+            for (int i = 0; i < 7; i++) {
+                Characters c = CharacterDAO.getCharacterByID(cxn, i + 1);
+                for (int j = 0; j < stats.length; j++) {
+                    CharacterStatsDAO.create(cxn, stats[j], c, values[i][j]);
+                    CharacterStatsDAO.getCharacterStatsByIDAndStatsName(cxn, c, stats[j]);
+                }
+                CharacterStatsDAO.getCharacterStatsById(cxn, c);
+            }
 
-            Gear gear1 = GearDAO.create(cxn, "Iron Helm", 5, 1, 1200, 1, Slot.HELMET);
-            Gear gear2 = GearDAO.create(cxn, "Steel Visor", 10, 1, 2500, 5, Slot.HELMET);
-            Gear gear3 = GearDAO.create(cxn, "Mystic Hood", 15, 1, 4000, 8, Slot.HELMET);
-            Gear gear4 = GearDAO.create(cxn, "Shadow Mask", 20, 1, 5200, 10, Slot.HELMET);
-            Gear gear5 = GearDAO.create(cxn, "Dragon Helm", 30, 1, 10000, 15, Slot.HELMET);
+            System.out.println("Testing CharacterInventoryDAO...");
+            Item potion = ItemDAO.create(cxn, "Health Potion", 1, 10, 100, 1);
+            for (int i = 1; i <= 3; i++) {
+                Characters c = CharacterDAO.getCharacterByID(cxn, i);
+                CharacterInventoryDAO.create(cxn, i, c, potion, 5 + i);
+                CharacterInventoryDAO.getInventoryByIdAndSlotNumber(cxn, c, i);
+            }
+            CharacterInventoryDAO.getAllInventoryById(cxn, CharacterDAO.getCharacterByID(cxn, 1));
 
-            Gear gear6 = GearDAO.create(cxn, "Leather Vest", 5, 1, 1400, 1, Slot.HELMET);
-            Gear gear7 = GearDAO.create(cxn, "Chainmail Chestplate", 10, 1, 3000, 5, Slot.HELMET);
-            Gear gear8 = GearDAO.create(cxn, "Runic Battleplate", 18, 1, 6000, 9, Slot.HELMET);
-            Gear gear9 = GearDAO.create(cxn, "Necromancer Robe", 22, 1, 7500, 12, Slot.HELMET);
-            Gear gear10 = GearDAO.create(cxn, "Titan Armor", 35, 1, 12000, 18, Slot.HELMET);
+            System.out.println("Testing GearDAO and GearBonusDAO...");
+            Slot helmet = Slot.HELMET;
+            Gear g1 = GearDAO.create(cxn, "Iron Helm", 5, 1, 1200, 1, helmet);
+            Gear g2 = GearDAO.create(cxn, "Steel Visor", 10, 1, 2500, 5, helmet);
+            Gear g3 = GearDAO.create(cxn, "Mystic Hood", 15, 1, 4000, 8, helmet);
+            GearBonusDAO.create(cxn, g1, Statistics.STRENGTH, 2);
+            GearBonusDAO.create(cxn, g2, Statistics.INTELLIGENCE, 3);
+            GearBonusDAO.create(cxn, g3, Statistics.HP, 50);
+            GearBonusDAO.getGearBonusById(cxn, g1);
+            GearBonusDAO.getGearBonusByIdAndStatsName(cxn, g1, Statistics.STRENGTH.name());
 
+            System.out.println("Testing CharacterEquipmentDAO with Gear...");
+            CharacterEquipmentDAO.create(cxn, CharacterDAO.getCharacterByID(cxn, 1), helmet, g1);
+            CharacterEquipmentDAO.create(cxn, CharacterDAO.getCharacterByID(cxn, 2), helmet, g2);
+            CharacterEquipmentDAO.create(cxn, CharacterDAO.getCharacterByID(cxn, 3), helmet, g3);
+            CharacterEquipmentDAO.getEquipmentByIdAndSlot(cxn, CharacterDAO.getCharacterByID(cxn, 1), helmet);
+            CharacterEquipmentDAO.getAllEquipmentById(cxn, CharacterDAO.getCharacterByID(cxn, 1));
 
+            System.out.println("Testing WeaponDAO...");
+            Weapon w1 = WeaponDAO.create(cxn, "Iron Sword", 10, 1, 1200, 2, Job.WARRIOR, 40);
+            Weapon w2 = WeaponDAO.create(cxn, "Mage Wand", 12, 1, 1500, 4, Job.MAGE, 55);
+            Weapon fetchedW1 = WeaponDAO.getWeaponById(cxn, w1.getItemID());
+
+            WeaponDAO.updateWeaponDamage(cxn, w1, 45);
+            CharacterEquipmentDAO.create(cxn, CharacterDAO.getCharacterByID(cxn, 1), Slot.WEAPON, w1);
+            CharacterEquipmentDAO.create(cxn, CharacterDAO.getCharacterByID(cxn, 2), Slot.WEAPON, w2);
+
+            System.out.println("Testing ConsumableDAO and ConsumableBonusDAO...");
+            Item boostItem = ItemDAO.create(cxn, "Boost Elixir", 5, 1, 200, 3);
+            Consumable boost = ConsumableDAO.create(cxn, boostItem, "Boost strength");
+            ConsumableDAO.getConsumableById(cxn, boostItem);
+            ConsumableDAO.updateDescription(cxn, boost, "Boosts strength for 5 minutes");
+            ConsumableBonusDAO.create(cxn, boost, Statistics.STRENGTH, 5, 10, 0.2f);
+            ConsumableBonusDAO.getConsumableBonusByItemIDAndStatsName(cxn, boost, Statistics.STRENGTH);
+            ConsumableBonusDAO.getConsumableBonusByItemID(cxn, boostItem);
+
+            System.out.println("Extended DAO testing done based on SQL inserts.");
+            cxn.close();
         }
     }
 
@@ -380,12 +414,12 @@ public class Driver {
             cxn.createStatement().executeUpdate("""
 
                                        INSERT INTO Race (RaceName) VALUES
-                                            ('Elf'),
-                                            ('Orc'),
-                                            ('Human'),
-                                            ('Dwarf'),
-                                            ('Goblin'),
-                                            ('Halfling');
+                                            ('ELF'),
+                                            ('ORC'),
+                                            ('HUMAN'),
+                                            ('DWARF'),
+                                            ('GOBLIN'),
+                                            ('HALFLING');
                     """
             );
 
@@ -398,7 +432,7 @@ public class Driver {
             cxn.createStatement().executeUpdate("""
 
                     INSERT INTO Statistics (StatsName) VALUES
-                    ('Strength'), ('Dexterity'), ('Vitality'), ('Intelligence'), ('HP'), ('MP'), ('Critical Rate'), ('Evasion');
+                    ('Strength'), ('Dexterity'), ('Vitality'), ('Intelligence'), ('HP'), ('MP'), ('CriticalRate'), ('EvasionRate');
                     """
             );
 

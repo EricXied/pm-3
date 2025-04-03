@@ -24,8 +24,11 @@ public class PlayerDAO {
         }
     }
 
-    public static Player getPlayerByID(Connection cxn, int playerId) throws SQLException {
-        String getPlayerSql = "SELECT * FROM player WHERE id = ?";
+    public static Player getPlayerByID(
+            Connection cxn,
+            int playerId
+    ) throws SQLException {
+        String getPlayerSql = "SELECT * FROM player WHERE PlayerId = ?";
         try (PreparedStatement stmt = cxn.prepareStatement(getPlayerSql)) {
             stmt.setInt(1, playerId);
             try (ResultSet rs = stmt.executeQuery()) {

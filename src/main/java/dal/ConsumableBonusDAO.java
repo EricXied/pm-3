@@ -21,7 +21,7 @@ public class ConsumableBonusDAO {
             int bounsCap,
             float bonusPercentage
     ) throws SQLException {
-        String insertConsumableBonusSql = "insert into ConsumableBonus (ItemID, StatsName, Value, BounsCap, BonusPercentage) values (?,?,?,?,?)";
+        String insertConsumableBonusSql = "insert into ConsumableBonus (ItemID, StatsName, Value, BonusCap, BonusPercentage) values (?,?,?,?,?)";
         try (PreparedStatement ps = cxn.prepareStatement(insertConsumableBonusSql)) {
             ps.setInt(1, consumable.getItemID());
             ps.setString(2, statistics.getName());
@@ -47,6 +47,7 @@ public class ConsumableBonusDAO {
         String selectConsumableBonusSql = "select * from ConsumableBonus where ItemID = ? and StatsName = ?";
         try (PreparedStatement ps = cxn.prepareStatement(selectConsumableBonusSql)) {
             ps.setInt(1, consumable.getItemID());
+            ps.setString(2, statistics.getName());
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return new ConsumableBonus(
@@ -76,7 +77,7 @@ public class ConsumableBonusDAO {
                 while (rs.next()) {
                     bonuses.add(new ConsumableBonus(
                             consumable,
-                            Statistics.valueOf(rs.getString("StatsName")),
+                            Statistics.valueOf(rs.getString("StatsName").toUpperCase()),
                             rs.getInt("Value"),
                             rs.getInt("BonusCap"),
                             rs.getFloat("BonusPercentage")

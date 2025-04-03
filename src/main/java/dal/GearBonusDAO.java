@@ -65,7 +65,7 @@ public class GearBonusDAO {
 
                 List<GearBonus> gearBonusList = new ArrayList<>();
                 while (rs.next()) {
-                    Statistics statistics = Statistics.valueOf(rs.getString("StatsName"));
+                    Statistics statistics = Statistics.valueOf(rs.getString("StatsName").toUpperCase());
                     gearBonusList.add(new GearBonus(item, statistics, rs.getInt("Value")));
 
                 }

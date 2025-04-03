@@ -41,13 +41,17 @@ public class CharacterInventoryDAO {
             ps.setInt(1, character.getCharacterID());
             ps.setInt(2, slotNumber);
             try (ResultSet rs = ps.executeQuery()) {
-                Item item = ItemDAO.getItemById(cxn, rs.getInt("ItemID"));
-                return new CharacterInventory(
-                        slotNumber,
-                        character,
-                        item,
-                        rs.getInt("Quantity")
-                );
+
+                if (rs.next()) {
+                    Item item = ItemDAO.getItemById(cxn, rs.getInt("ItemID"));
+                    return new CharacterInventory(
+                            slotNumber,
+                            character,
+                            item,
+                            rs.getInt("Quantity"));
+                } else {
+                    return null;
+                }
             }
         }
     }

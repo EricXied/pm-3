@@ -20,7 +20,7 @@ public class CharacterCurrencyDAO {
             int totalAmount,
             int weeklyAmount
     ) throws SQLException {
-        String insertCharacterCurrencySQL = "INSERT INTO CharacterCurrencies (CurrencyName, CharacterID, TotalAmount, WeeklyAmount) VALUES (?, ?, ?, ?)";
+        String insertCharacterCurrencySQL = "INSERT INTO CharacterCurrency (CurrencyName, CharacterID, TotalAmount, WeeklyAmount) VALUES (?, ?, ?, ?)";
         try (PreparedStatement ps = cxn.prepareStatement(insertCharacterCurrencySQL)) {
             ps.setString(1, currency.getCurrencyName());
             ps.setInt(2, characters.getCharacterID());
@@ -41,7 +41,7 @@ public class CharacterCurrencyDAO {
             Characters character,
             String currencyName
     ) throws SQLException {
-        String getCharacterCurrencySQL = "SELECT * FROM CharacterCurrencies WHERE CharacterID = ? AND CurrencyName = ?";
+        String getCharacterCurrencySQL = "SELECT * FROM CharacterCurrency WHERE CharacterID = ? AND CurrencyName = ?";
         try (PreparedStatement ps = cxn.prepareStatement(getCharacterCurrencySQL)) {
             ps.setInt(1, character.getCharacterID());
             ps.setString(2, currencyName);
@@ -63,12 +63,12 @@ public class CharacterCurrencyDAO {
     }
 
 
-    public List<CharacterCurrency> getCharacterCurrencies(
+    public static List<CharacterCurrency> getCharacterCurrencies(
             Connection cxn,
             Characters character
     ) throws SQLException {
 
-        String getCharacterCurrenciesSql = "SELECT * FROM CharacterCurrencies WHERE CharacterID = ?";
+        String getCharacterCurrenciesSql = "SELECT * FROM CharacterCurrency WHERE CharacterID = ?";
 
         try (PreparedStatement ps = cxn.prepareStatement(getCharacterCurrenciesSql)) {
             ps.setInt(1, character.getCharacterID());

@@ -45,13 +45,13 @@ public class WeaponDAO {
             Connection cxn,
             int itemId
     ) throws SQLException {
-        String getWeaponSql = "select from Weapon where ItemID = ?";
+        String getWeaponSql = "select * from Weapon where ItemID = ?";
         try (PreparedStatement ps = cxn.prepareStatement(getWeaponSql)) {
             ps.setInt(1, itemId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     Item item = ItemDAO.getItemById(cxn, itemId);
-                    Job job = Job.valueOf(rs.getString("JobName"));
+                    Job job = Job.valueOf(rs.getString("JobName").toUpperCase());
                     return new Weapon(
                             itemId,
                             item.getItemName(),
@@ -78,9 +78,10 @@ public class WeaponDAO {
         try (PreparedStatement ps = cxn.prepareStatement(updateDamageSql)) {
             Item item = ItemDAO.getItemById(cxn, weapon.getItemID());
             ps.setInt(1, newDamage);
+            ps.setInt(2, weapon.getItemID());
             ps.executeUpdate();
             return new Weapon(
-                    item.getItemID(),
+                    weapon.getItemID(),
                     item.getItemName(),
                     item.getLevel(),
                     item.getMaxStackSize(),

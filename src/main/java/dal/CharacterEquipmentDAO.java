@@ -66,7 +66,7 @@ public class CharacterEquipmentDAO {
             while (rs.next()) {
                 equipmentList.add(new CharacterEquipment(
                         character,
-                        Slot.valueOf(rs.getString("SlotName")),
+                        Slot.valueOf(rs.getString("SlotName").toUpperCase()),
                         ItemDAO.getItemById(cxn, rs.getInt("ItemID"))
                 ));
             }

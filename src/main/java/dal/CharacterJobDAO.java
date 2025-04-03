@@ -21,7 +21,7 @@ public class CharacterJobDAO {
             int xp,
             boolean lock
     ) throws SQLException {
-        String insertCharacterJobSql = "INSERT INTO CharacterJob (JobName, CharacterID, Level, XP, Lock)VALUES (?,?,?,?,?)";
+        String insertCharacterJobSql = "INSERT INTO CharacterJob (JobName, CharacterID, Level, XP, `Lock`) VALUES (?,?,?,?,?)";
         try (PreparedStatement ps = cxn.prepareStatement(insertCharacterJobSql)) {
             ps.setString(1, job.getName());
             ps.setInt(2, character.getCharacterID());
@@ -65,7 +65,7 @@ public class CharacterJobDAO {
         }
     }
 
-    public List<CharacterJob> getAllCharacterJobsById(
+    public static List<CharacterJob> getAllCharacterJobsById(
             Connection cxn,
             Characters character
 
@@ -78,7 +78,7 @@ public class CharacterJobDAO {
                 while (rs.next()) {
                     jobs.add(
                             new CharacterJob(
-                                    Job.valueOf(rs.getString("JobName")),
+                                    Job.valueOf(rs.getString("JobName").toUpperCase()),
                                     character,
                                     rs.getInt("Level"),
                                     rs.getInt("XP"),

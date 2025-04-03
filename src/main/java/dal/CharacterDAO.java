@@ -19,7 +19,7 @@ public class CharacterDAO {
             Race race,
             Clan clan
     ) throws SQLException {
-        String createCharacterSql = "insert into character (PlayerID, FirstName, LastName, Race, Clan ) values(?,?,?,?,?)";
+        String createCharacterSql = "insert into Characters (PlayerID, FirstName, LastName, RaceName, ClanName ) values(?,?,?,?,?)";
         try (PreparedStatement insertStmt = cxn.prepareStatement(createCharacterSql, Statement.RETURN_GENERATED_KEYS)) {
             insertStmt.setInt(1, player.getPlayerID());
             insertStmt.setString(2, firstName);
@@ -43,13 +43,13 @@ public class CharacterDAO {
             Connection cxn,
             int characterID
     ) throws SQLException {
-        String getCharacterSql = "select * from character where CharacterID = ?";
+        String getCharacterSql = "select * from Characters where CharacterID = ?";
         try (PreparedStatement selectStmt = cxn.prepareStatement(getCharacterSql)) {
             selectStmt.setInt(1, characterID);
             ResultSet rs = selectStmt.executeQuery();
             if (rs.next()) {
                 Player player = PlayerDAO.getPlayerByID(cxn, rs.getInt("PlayerID"));
-                Race race = Race.valueOf(rs.getString("Race"));
+                Race race = Race.valueOf(rs.getString("RaceName").toUpperCase());
                 Clan clan = ClanDAO.getClanByName(cxn, rs.getString("ClanName"), race);
                 return new Characters(
                         characterID,
@@ -69,14 +69,14 @@ public class CharacterDAO {
             Connection cxn,
             Player player
     ) throws SQLException {
-        String getCharacterSql = "select * from character where PlayerID = ?";
+        String getCharacterSql = "select * from Characters where PlayerID = ?";
         try (PreparedStatement selectStmt = cxn.prepareStatement(getCharacterSql)) {
             selectStmt.setInt(1, player.getPlayerID());
             ResultSet rs = selectStmt.executeQuery();
             List<Characters> characters = new ArrayList<>();
 
             while (rs.next()) {
-                Race race = Race.valueOf(rs.getString("Race"));
+                Race race = Race.valueOf(rs.getString("RaceName").toUpperCase());
                 Clan clan = ClanDAO.getClanByName(cxn, rs.getString("ClanName"), race);
                 characters.add(new Characters(
                         rs.getInt("CharacterID"),
