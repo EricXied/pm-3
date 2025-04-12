@@ -1,8 +1,8 @@
-package main.java.dal;
+package dal;
 
-import main.java.model.Gear;
-import main.java.model.Item;
-import main.java.model.Slot;
+import model.Gear;
+import model.Item;
+import model.Slot;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

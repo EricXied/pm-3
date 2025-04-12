@@ -1,9 +1,9 @@
-package main.java.dal;
+package dal;
 
-import main.java.model.Characters;
-import main.java.model.Clan;
-import main.java.model.Player;
-import main.java.model.Race;
+import model.Characters;
+import model.Clan;
+import model.Player;
+import model.Race;
 
 import java.sql.*;
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
-package main.java.dal;
+package dal;
 
-import main.java.model.Consumable;
-import main.java.model.Item;
+import model.Consumable;
+import model.Item;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

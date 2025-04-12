@@ -1,4 +1,4 @@
-package main.java.model;
+package model;
 
 public class Consumable extends Item {
     private String description;

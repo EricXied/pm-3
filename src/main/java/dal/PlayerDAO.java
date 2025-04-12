@@ -1,6 +1,6 @@
-package main.java.dal;
+package dal;
 
-import main.java.model.Player;
+import model.Player;
 
 import java.sql.*;
 
@@ -37,6 +37,27 @@ public class PlayerDAO {
                             playerId,
                             rs.getString("FullName"),
                             rs.getString("Email")
+                    );
+                } else {
+                    return null;
+                }
+            }
+        }
+    }
+
+    public static Player getPlayerByEmail(
+            Connection cxn,
+            String email
+    ) throws SQLException {
+        String getPlayerSql = "SELECT * FROM player WHERE Email = ?";
+        try (PreparedStatement stmt = cxn.prepareStatement(getPlayerSql)) {
+            stmt.setString(1, email);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Player(
+                            rs.getInt("PlayerID"),
+                            rs.getString("FullName"),
+                            email
                     );
                 } else {
                     return null;

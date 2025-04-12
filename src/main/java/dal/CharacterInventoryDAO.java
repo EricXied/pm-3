@@ -1,8 +1,8 @@
-package main.java.dal;
+package dal;
 
-import main.java.model.CharacterInventory;
-import main.java.model.Characters;
-import main.java.model.Item;
+import model.CharacterInventory;
+import model.Characters;
+import model.Item;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -1,6 +1,6 @@
-package main.java.dal;
+package dal;
 
-import main.java.model.Item;
+import model.Item;
 
 import java.sql.*;
 

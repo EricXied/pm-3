@@ -1,9 +1,9 @@
-package main.java.dal;
+package dal;
 
-import main.java.model.Consumable;
-import main.java.model.ConsumableBonus;
-import main.java.model.Item;
-import main.java.model.Statistics;
+import model.Consumable;
+import model.ConsumableBonus;
+import model.Item;
+import model.Statistics;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -1,8 +1,8 @@
-package main.java.dal;
+package dal;
 
-import main.java.model.Item;
-import main.java.model.Job;
-import main.java.model.Weapon;
+import model.Item;
+import model.Job;
+import model.Weapon;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

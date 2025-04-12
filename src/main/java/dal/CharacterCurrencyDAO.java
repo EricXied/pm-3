@@ -1,8 +1,8 @@
-package main.java.dal;
+package dal;
 
-import main.java.model.CharacterCurrency;
-import main.java.model.Characters;
-import main.java.model.Currency;
+import model.CharacterCurrency;
+import model.Characters;
+import model.Currency;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

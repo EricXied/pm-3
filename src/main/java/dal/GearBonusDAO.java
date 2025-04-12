@@ -1,8 +1,8 @@
-package main.java.dal;
+package dal;
 
-import main.java.model.GearBonus;
-import main.java.model.Item;
-import main.java.model.Statistics;
+import model.GearBonus;
+import model.Item;
+import model.Statistics;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

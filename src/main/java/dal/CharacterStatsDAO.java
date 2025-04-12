@@ -1,8 +1,8 @@
-package main.java.dal;
+package dal;
 
-import main.java.model.CharacterStats;
-import main.java.model.Characters;
-import main.java.model.Statistics;
+import model.CharacterStats;
+import model.Characters;
+import model.Statistics;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

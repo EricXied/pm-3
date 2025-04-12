@@ -1,4 +1,4 @@
-package main.java.model;
+package model;
 
 public class Clan {
     private Race race;
@@ -11,6 +11,7 @@ public class Clan {
     public Race getRace() {
         return race;
     }
+
     public String getClan() {
         return clan;
     }

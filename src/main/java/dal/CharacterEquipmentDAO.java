@@ -1,9 +1,9 @@
-package main.java.dal;
+package dal;
 
-import main.java.model.CharacterEquipment;
-import main.java.model.Characters;
-import main.java.model.Item;
-import main.java.model.Slot;
+import model.CharacterEquipment;
+import model.Characters;
+import model.Item;
+import model.Slot;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

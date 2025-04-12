@@ -1,6 +1,6 @@
-package main.java.dal;
+package dal;
 
-import main.java.model.Currency;
+import model.Currency;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

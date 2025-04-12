@@ -1,6 +1,6 @@
 
-import main.java.dal.*;
-import main.java.model.*;
+import dal.*;
+import model.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;

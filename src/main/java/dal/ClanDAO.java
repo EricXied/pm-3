@@ -1,7 +1,7 @@
-package main.java.dal;
+package dal;
 
-import main.java.model.Clan;
-import main.java.model.Race;
+import model.Clan;
+import model.Race;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

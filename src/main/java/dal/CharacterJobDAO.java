@@ -1,8 +1,8 @@
-package main.java.dal;
+package dal;
 
-import main.java.model.CharacterJob;
-import main.java.model.Characters;
-import main.java.model.Job;
+import model.CharacterJob;
+import model.Characters;
+import model.Job;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
