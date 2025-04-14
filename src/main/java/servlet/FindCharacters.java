@@ -7,8 +7,7 @@ import model.Player;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.annotation.*;
 import javax.servlet.ServletException;
@@ -47,21 +46,53 @@ public class FindCharacters extends HttpServlet {
         Map<String, String> messages = new HashMap<>();
         req.setAttribute("messages", messages);
 
-        // Retrieve and validate name.  This comes from the query string
-        // (for GET queries) or the HTTP headers (for POST queries), but
-        // the Servlet interface provides the same API for accessing the
-        // value in both cases.
         String email = req.getParameter("email");
-        if (email == null || email.trim().isEmpty()) {
-            messages.put(RESPONSE_MESSAGE, "Please enter a valid email.");
+        String name = req.getParameter("name");
+        String sortBy = req.getParameter("sortBy");
+        if ((email == null || email.trim().isEmpty()) && (name == null || name.trim().isEmpty())) {
+            messages.put(RESPONSE_MESSAGE, "Please enter a valid email or name.");
         } else {
-            // Retrieve the BlogUsers records and store as an attribute.
             try (Connection cxn = ConnectionManager.getConnection()) {
-                Player player = PlayerDAO.getPlayerByEmail(cxn, email);
+                List<Characters> characters = new ArrayList<>();
+
+                if (email != null && !email.trim().isEmpty()) {
+                    Player player = PlayerDAO.getPlayerByEmail(cxn, email);
+                    if (player != null) {
+                        characters = CharacterDAO.getCharactersByPlayerId(cxn, player);
+                        messages.put(RESPONSE_MESSAGE, "Displaying characters for " + email);
+                    } else {
+                        messages.put(RESPONSE_MESSAGE, "No player found with email: " + email);
+                    }
+                } else if (name != null && !name.trim().isEmpty()) {
+                    characters = CharacterDAO.searchCharactersByPartialName(cxn, name);
+                    messages.put(RESPONSE_MESSAGE, "Displaying characters matching name: " + name);
+                }
+
+
+                if (sortBy != null) {
+                    Comparator<Characters> comparator = null;
+                    switch (sortBy) {
+                        case "firstName":
+                            comparator = Comparator.comparing(c -> c.getFirstName(), String.CASE_INSENSITIVE_ORDER);
+                            break;
+                        case "lastName":
+                            comparator = Comparator.comparing(c -> c.getLastName(), String.CASE_INSENSITIVE_ORDER);
+                            break;
+                        case "race":
+                            comparator = Comparator.comparing(c -> c.getRace().getName(), String.CASE_INSENSITIVE_ORDER);
+                            break;
+                        case "clan":
+                            comparator = Comparator.comparing(c -> c.getClan().getClan(), String.CASE_INSENSITIVE_ORDER);
+                            break;
+                    }
+                    if (comparator != null) {
+                        characters.sort(comparator);
+                    }
+                }
 
                 req.setAttribute(
                         "Characters",
-                        CharacterDAO.getCharactersByPlayerId(cxn, player)
+                        characters
                 );
                 messages.put(RESPONSE_MESSAGE, "Displaying results for " + email);
             } catch (SQLException e) {

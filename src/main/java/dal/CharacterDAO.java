@@ -91,4 +91,48 @@ public class CharacterDAO {
             return characters;
         }
     }
+
+    public static int deleteCharacterByName(
+            Connection cxn,
+            String firstName,
+            String lastName
+    ) throws SQLException {
+        String deleteCharacterSql = "delete from Characters where FirstName = ? and LastName = ?";
+        try (PreparedStatement deleteStmt = cxn.prepareStatement(deleteCharacterSql)) {
+            deleteStmt.setString(1, firstName);
+            deleteStmt.setString(2, lastName);
+            return deleteStmt.executeUpdate();
+        }
+    }
+
+    public static List<Characters> searchCharactersByPartialName(
+            Connection cxn,
+            String name) throws SQLException {
+        String getCharacterSql = "select * from Player where FullName like ?";
+
+        try (PreparedStatement selectStmt = cxn.prepareStatement(getCharacterSql)) {
+            selectStmt.setString(1, name + "%");
+            ResultSet rs = selectStmt.executeQuery();
+            List<Characters> allCharacters = new ArrayList<>();
+            while (rs.next()) {
+                Player player = PlayerDAO.getPlayerByID(cxn, rs.getInt("PlayerID"));
+                List<Characters> characters = CharacterDAO.getCharactersByPlayerId(cxn, player);
+                allCharacters.addAll(characters);
+            }
+            return allCharacters;
+        }
+    }
+
+    public static List<Characters> getAllCharacters(Connection cxn) throws SQLException {
+        String sql = "SELECT * FROM Characters";
+        List<Characters> characters = new ArrayList<>();
+        try (PreparedStatement ps = cxn.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Characters character = CharacterDAO.getCharacterByID(cxn, rs.getInt("CharacterID"));
+                characters.add(character);
+            }
+        }
+        return characters;
+    }
 }

@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>BlogComments</title>
+    <title>Character Equipment</title>
 </head>
 <body>
 <h1>${messages.title}</h1>
@@ -19,12 +19,12 @@
         <th>Slot</th>
         <th>Item</th>
     </tr>
-    <c:forEach items="${characterEquipments}" var="characterEquipments" >
+    <c:forEach items="${characterequipments}" var="characterequipments" >
         <tr>
-            <td><c:out value="${characterEquipments.getCharacter().getFirstName}" /></td>
-            <td><c:out value="${characterEquipments.getCharacter().getLastName()}" /></td>
-            <td><c:out value="${characterEquipments.getSlot().getName()}" /></td>
-            <td><c:out value="${characterEquipments.getItem().getItemName()}" /></td>
+            <td><c:out value="${characterequipments.getCharacter().getFirstName()}" /></td>
+            <td><c:out value="${characterequipments.getCharacter().getLastName()}" /></td>
+            <td><c:out value="${characterequipments.getSlot().getName()}" /></td>
+            <td><c:out value="${characterequipments.getItem().getItemName()}" /></td>
         </tr>
     </c:forEach>
 </table>

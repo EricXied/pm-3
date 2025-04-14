@@ -76,4 +76,13 @@ public class CharacterStatsDAO {
         }
     }
 
+    public static void updateStat(Connection cxn, CharacterStats cs) throws SQLException {
+        String updateStatsSQL = "UPDATE CharacterStats SET Value = ? WHERE CharacterID = ? AND StatsName = ?";
+        try (PreparedStatement ps = cxn.prepareStatement(updateStatsSQL)) {
+            ps.setInt(1, cs.getValue());
+            ps.setInt(2, cs.getCharacter().getCharacterID());
+            ps.setString(3, cs.getStatistics().getName());
+            ps.executeUpdate();
+        }
+    }
 }

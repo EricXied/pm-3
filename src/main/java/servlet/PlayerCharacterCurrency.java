@@ -1,9 +1,9 @@
 package servlet;
 
+import dal.CharacterCurrencyDAO;
 import dal.CharacterDAO;
-import dal.CharacterEquipmentDAO;
 import dal.ConnectionManager;
-import model.CharacterEquipment;
+import model.CharacterCurrency;
 import model.Characters;
 
 import javax.servlet.ServletException;
@@ -19,8 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet("/characterequipment")
-public class PlayerCharacterEquipment extends HttpServlet {
+@WebServlet("/charactercurrency")
+public class PlayerCharacterCurrency extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final String TITLE_MESSAGE = "title";
 
@@ -29,7 +29,7 @@ public class PlayerCharacterEquipment extends HttpServlet {
             throws ServletException, IOException {
         Map<String, String> messages = new HashMap<String, String>();
         req.setAttribute("messages", messages);
-        List<CharacterEquipment> characterEquipments = new ArrayList<CharacterEquipment>();
+        List<CharacterCurrency> characterCurrency = new ArrayList<CharacterCurrency>();
         String characterId = req.getParameter("characterid");
 
         try (Connection cxn = ConnectionManager.getConnection()) {
@@ -39,8 +39,8 @@ public class PlayerCharacterEquipment extends HttpServlet {
                 if (character == null) {
                     messages.put(TITLE_MESSAGE, "Character not found");
                 } else {
-                    characterEquipments = CharacterEquipmentDAO.getAllEquipmentById(cxn, character);
-                    messages.put(TITLE_MESSAGE, "Equipments for Character " + character.getFirstName() + " " + character.getLastName());
+                    characterCurrency = CharacterCurrencyDAO.getCharacterCurrencies(cxn, character);
+                    messages.put(TITLE_MESSAGE, "Currencies for Character " + character.getFirstName() + " " + character.getLastName());
                 }
 
             }
@@ -49,8 +49,8 @@ public class PlayerCharacterEquipment extends HttpServlet {
             e.printStackTrace();
             throw new IOException(e);
         }
-        req.setAttribute("characterequipments", characterEquipments);
-        req.getRequestDispatcher("PlayerCharacterEquipment.jsp").forward(req, resp);
+        req.setAttribute("charactercurrency", characterCurrency);
+        req.getRequestDispatcher("PlayerCharacterCurrency.jsp").forward(req, resp);
     }
 
 }

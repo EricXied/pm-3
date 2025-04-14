@@ -2,6 +2,7 @@
 import dal.*;
 import model.*;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
@@ -126,11 +127,11 @@ public class Driver {
             GearBonusDAO.getGearBonusByIdAndStatsName(cxn, g1, Statistics.STRENGTH.name());
 
             System.out.println("Testing CharacterEquipmentDAO with Gear...");
-            CharacterEquipmentDAO.create(cxn, CharacterDAO.getCharacterByID(cxn, 1), helmet, g1);
-            CharacterEquipmentDAO.create(cxn, CharacterDAO.getCharacterByID(cxn, 2), helmet, g2);
-            CharacterEquipmentDAO.create(cxn, CharacterDAO.getCharacterByID(cxn, 3), helmet, g3);
-            CharacterEquipmentDAO.getEquipmentByIdAndSlot(cxn, CharacterDAO.getCharacterByID(cxn, 1), helmet);
-            CharacterEquipmentDAO.getAllEquipmentById(cxn, CharacterDAO.getCharacterByID(cxn, 1));
+//            CharacterEquipmentDAO.create(cxn, CharacterDAO.getCharacterByID(cxn, 1), helmet, g1);
+//            CharacterEquipmentDAO.create(cxn, CharacterDAO.getCharacterByID(cxn, 2), helmet, g2);
+//            CharacterEquipmentDAO.create(cxn, CharacterDAO.getCharacterByID(cxn, 3), helmet, g3);
+//            CharacterEquipmentDAO.getEquipmentByIdAndSlot(cxn, CharacterDAO.getCharacterByID(cxn, 1), helmet);
+//            CharacterEquipmentDAO.getAllEquipmentById(cxn, CharacterDAO.getCharacterByID(cxn, 1));
 
             System.out.println("Testing WeaponDAO...");
             Weapon w1 = WeaponDAO.create(cxn, "Iron Sword", 10, 1, 1200, 2, Job.WARRIOR, 40);
@@ -138,8 +139,8 @@ public class Driver {
             Weapon fetchedW1 = WeaponDAO.getWeaponById(cxn, w1.getItemID());
 
             WeaponDAO.updateWeaponDamage(cxn, w1, 45);
-            CharacterEquipmentDAO.create(cxn, CharacterDAO.getCharacterByID(cxn, 1), Slot.WEAPON, w1);
-            CharacterEquipmentDAO.create(cxn, CharacterDAO.getCharacterByID(cxn, 2), Slot.WEAPON, w2);
+//            CharacterEquipmentDAO.create(cxn, CharacterDAO.getCharacterByID(cxn, 1), Slot.WEAPON, w1);
+//            CharacterEquipmentDAO.create(cxn, CharacterDAO.getCharacterByID(cxn, 2), Slot.WEAPON, w2);
 
             System.out.println("Testing ConsumableDAO and ConsumableBonusDAO...");
             Item boostItem = ItemDAO.create(cxn, "Boost Elixir", 5, 1, 200, 3);
@@ -151,6 +152,36 @@ public class Driver {
             ConsumableBonusDAO.getConsumableBonusByItemID(cxn, boostItem);
 
             System.out.println("Extended DAO testing done based on SQL inserts.");
+
+            Slot boot = Slot.BOOTS;
+            Slot weapon = Slot.WEAPON;
+
+            List<Characters> allCharacters = CharacterDAO.getAllCharacters(cxn); // 建议你添加这个 DAO 方法
+
+            int gearCounter = 1000; // 用于避免 ItemID 冲突（如果你用手动主键）
+
+            for (Characters character : allCharacters) {
+                // Helmet
+                Gear helm = GearDAO.create(cxn, "Iron Helmet", 5, 1, 1200, 2, Slot.HELMET);
+                GearBonusDAO.create(cxn, helm, Statistics.HP, 40);
+                GearBonusDAO.create(cxn, helm, Statistics.VITALITY, 3);
+                GearBonusDAO.create(cxn, helm, Statistics.EVASIONRATE, 2);
+                CharacterEquipmentDAO.create(cxn, character, helmet, helm);
+
+                Gear bt = GearDAO.create(cxn, "Iron Chestplate", 8, 1, 1800, 3, Slot.BOOTS);
+                GearBonusDAO.create(cxn, bt, Statistics.STRENGTH, 4);
+                GearBonusDAO.create(cxn, bt, Statistics.VITALITY, 4);
+                GearBonusDAO.create(cxn, bt, Statistics.HP, 50);
+                CharacterEquipmentDAO.create(cxn, character, boot, bt);
+
+
+                Weapon sword = WeaponDAO.create(cxn, "Bronze Sword", 10, 1, 1500, 4, Job.WARRIOR, 60);
+                GearBonusDAO.create(cxn, sword, Statistics.STRENGTH, 6);
+                GearBonusDAO.create(cxn, sword, Statistics.DEXTERITY, 3);
+                GearBonusDAO.create(cxn, sword, Statistics.CRITICALRATE, 5);
+                CharacterEquipmentDAO.create(cxn, character, weapon, sword);
+
+            }
             cxn.close();
         }
     }
