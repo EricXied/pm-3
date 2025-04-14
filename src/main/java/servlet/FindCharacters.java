@@ -94,7 +94,6 @@ public class FindCharacters extends HttpServlet {
                         "Characters",
                         characters
                 );
-                messages.put(RESPONSE_MESSAGE, "Displaying results for " + email);
             } catch (SQLException e) {
                 e.printStackTrace();
                 throw new IOException(e);
